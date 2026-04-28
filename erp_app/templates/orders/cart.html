@@ -1,0 +1,66 @@
+{% extends 'layouts/base.html' %}
+{% block title %}سلة التسوق{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h3 class="fw-bold mb-4">سلة التسوق</h3>
+    {% if rows %}
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th>السعر</th>
+                <th>الكمية</th>
+                <th>المجموع</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    {% if row.product.image_url %}
+                    <img src="{{ url_for('static', filename=row.product.image_url) }}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">
+                    {% endif %}
+                    <span>{{ row.product.name }}</span>
+                  </div>
+                </td>
+                <td>{{ '%.2f'|format(row.product.price) }}</td>
+                <td>
+                  <form method="post" action="{{ url_for('orders.update_cart_item', product_id=row.product.id) }}" class="d-flex align-items-center gap-2">
+                    <input type="number" name="quantity" value="{{ row.quantity }}" min="1" max="{{ row.product.stock }}" class="form-control" style="width:70px;">
+                    <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-arrow-repeat"></i></button>
+                  </form>
+                </td>
+                <td>{{ '%.2f'|format(row.subtotal) }}</td>
+                <td>
+                  <a href="{{ url_for('orders.remove_from_cart', product_id=row.product.id) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-end fw-bold">الإجمالي:</td>
+                <td colspan="2" class="fw-bold text-primary">{{ '%.2f'|format(total) }}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <form method="post" action="{{ url_for('orders.checkout') }}">
+          <button type="submit" class="btn btn-erp w-100 mt-3">إتمام الطلب</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">السلة فارغة.</div>
+    <a href="{{ url_for('products.catalog') }}" class="btn btn-outline-dark">تصفح المنتجات</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

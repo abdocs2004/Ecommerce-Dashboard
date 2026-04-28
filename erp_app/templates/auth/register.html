@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+{% block title %}إنشاء حساب{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card auth-card shadow border-0">
+      <div class="card-body p-5">
+        <h4 class="fw-bold mb-4 text-center">إنشاء حساب جديد</h4>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">الاسم الكامل</label>
+            <input type="text" name="name" class="form-control" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">البريد الإلكتروني</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">كلمة المرور</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-erp w-100">تسجيل</button>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('auth.login') }}">لديك حساب بالفعل؟ سجل دخول</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

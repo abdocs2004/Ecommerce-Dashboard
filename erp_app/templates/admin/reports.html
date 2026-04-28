@@ -1,0 +1,47 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}التقارير{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">التقارير</h4>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6>تقرير المبيعات</h6>
+        <p class="text-muted">عرض المبيعات حسب نطاق زمني</p>
+        <a href="{{ url_for('reports.sales') }}" class="btn btn-erp btn-sm">عرض التقرير</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6>تقرير العملاء</h6>
+        <p class="text-muted">إحصائيات العملاء والمشتريات</p>
+        <a href="{{ url_for('reports.customers') }}" class="btn btn-erp btn-sm">عرض التقرير</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6>تقرير المخزون</h6>
+        <p class="text-muted">مستويات المخزون الحالية</p>
+        <a href="{{ url_for('reports.inventory') }}" class="btn btn-erp btn-sm">عرض التقرير</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h6>تقرير الأرباح</h6>
+        <p class="text-muted">حساب الأرباح والتكاليف</p>
+        <a href="{{ url_for('reports.profit') }}" class="btn btn-erp btn-sm">عرض التقرير</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

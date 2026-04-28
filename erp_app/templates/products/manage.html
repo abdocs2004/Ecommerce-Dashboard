@@ -1,0 +1,78 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}إدارة المنتجات{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">إدارة المنتجات</h4>
+  <a href="{{ url_for('products.new_product') }}" class="btn btn-erp"><i class="bi bi-plus-lg"></i> منتج جديد</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <form method="get" class="row g-2 mb-3">
+      <div class="col-md-4">
+        <input type="text" name="name" class="form-control" placeholder="اسم المنتج" value="{{ request.args.get('name','') }}">
+      </div>
+      <div class="col-md-3">
+        <select name="category_id" class="form-select">
+          <option value="">جميع الأقسام</option>
+          {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if request.args.get('category_id')|int == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-dark w-100">بحث</button>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>الصورة</th>
+            <th>الاسم</th>
+            <th>SKU</th>
+            <th>السعر</th>
+            <th>المخزون</th>
+            <th>الحالة</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for p in products %}
+          <tr>
+            <td>{{ p.id }}</td>
+            <td>
+              {% if p.image_url %}
+              <img src="{{ url_for('static', filename='uploads/' + p.image_url) }}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;">
+              {% else %}
+              <div class="bg-light d-flex align-items-center justify-content-center" style="width:50px;height:50px;border-radius:6px;"><i class="bi bi-image"></i></div>
+              {% endif %}
+            </td>
+            <td>{{ p.name }}</td>
+            <td><code>{{ p.sku }}</code></td>
+            <td>{{ '%.2f'|format(p.price) }}</td>
+            <td>{{ p.stock }}</td>
+            <td>
+              {% if p.is_active %}
+              <span class="badge bg-success">نشط</span>
+              {% else %}
+              <span class="badge bg-secondary">معطل</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('products.edit_product', product_id=p.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+              <a href="{{ url_for('products.toggle_active', product_id=p.id) }}" class="btn btn-sm btn-outline-warning"><i class="bi bi-toggle-on"></i></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="8" class="text-center text-muted">لا توجد منتجات</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

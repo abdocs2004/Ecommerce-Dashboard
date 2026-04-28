@@ -1,0 +1,72 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}تعديل منتج{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">تعديل منتج: {{ product.name }}</h4>
+  <a href="{{ url_for('products.manage') }}" class="btn btn-outline-dark btn-sm">رجوع</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">اسم المنتج</label>
+          <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">SKU</label>
+          <input type="text" name="sku" class="form-control" value="{{ product.sku }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">السعر</label>
+          <input type="number" step="0.01" name="price" class="form-control" value="{{ product.price }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">التكلفة</label>
+          <input type="number" step="0.01" name="cost" class="form-control" value="{{ product.cost or 0 }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">المخزون</label>
+          <input type="number" name="stock" class="form-control" value="{{ product.stock }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">القسم</label>
+          <select name="category_id" class="form-select" required>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">الوصف</label>
+          <textarea name="description" class="form-control" rows="3">{{ product.description or '' }}</textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">الصورة</label>
+          <input type="file" name="image" class="form-control" accept="image/*">
+          {% if product.image_url %}
+          <div class="mt-2">
+            <img src="{{ url_for('static', filename='uploads/' + product.image_url) }}" style="width:100px;height:100px;object-fit:cover;border-radius:6px;">
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">الوسوم</label>
+          <input type="text" name="tags" class="form-control" value="{{ product.tags|map(attribute='name')|join(', ') }}">
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="is_active" value="1" {% if product.is_active %}checked{% endif %}>
+            <label class="form-check-label">نشط</label>
+          </div>
+        </div>
+      </div>
+      <div class="d-grid mt-4">
+        <button type="submit" class="btn btn-erp">حفظ التغييرات</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,87 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}منتج جديد{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">إضافة منتج جديد</h4>
+  <a href="{{ url_for('products.manage') }}" class="btn btn-outline-dark btn-sm">رجوع</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">اسم المنتج</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">SKU</label>
+          <input type="text" name="sku" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">السعر</label>
+          <input type="number" step="0.01" name="price" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">التكلفة</label>
+          <input type="number" step="0.01" name="cost" class="form-control" value="0">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">المخزون</label>
+          <input type="number" name="stock" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">القسم</label>
+          <select name="category_id" class="form-select" required>
+            <option value="">اختر القسم</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-12">
+          <label class="form-label">الوصف</label>
+          <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">الصورة</label>
+          <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">الوسوم (مفصولة بفاصلة)</label>
+          <input type="text" name="tags" class="form-control" placeholder="مثال: جديد, خصم, مميز">
+        </div>
+      </div>
+
+      <hr class="my-4">
+      <h6>المتغيرات (اختياري)</h6>
+      <div id="variants">
+        <div class="row g-2 mb-2 variant-row">
+          <div class="col-md-4"><input type="text" name="variant_size" class="form-control" placeholder="المقاس"></div>
+          <div class="col-md-4"><input type="text" name="variant_color" class="form-control" placeholder="اللون"></div>
+          <div class="col-md-4"><input type="number" name="variant_stock" class="form-control" placeholder="المخزون"></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-secondary btn-sm mb-4" onclick="addVariant()">+ إضافة متغير</button>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-erp">حفظ المنتج</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function addVariant() {
+  const div = document.createElement('div');
+  div.className = 'row g-2 mb-2 variant-row';
+  div.innerHTML = `
+    <div class="col-md-4"><input type="text" name="variant_size" class="form-control" placeholder="المقاس"></div>
+    <div class="col-md-4"><input type="text" name="variant_color" class="form-control" placeholder="اللون"></div>
+    <div class="col-md-4"><input type="number" name="variant_stock" class="form-control" placeholder="المخزون"></div>
+  `;
+  document.getElementById('variants').appendChild(div);
+}
+</script>
+{% endblock %}
+

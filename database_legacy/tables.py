@@ -1,6 +1,32 @@
 from database.connection import databaseConfig
 
 
+def _ensure_products_category_column(cursor):
+    cursor.execute("SHOW COLUMNS FROM PRODUCTS LIKE 'CATEGORY';")
+    has_category_column = cursor.fetchone()
+
+    if not has_category_column:
+        cursor.execute(
+            """
+            ALTER TABLE PRODUCTS
+            ADD COLUMN CATEGORY VARCHAR(100) NOT NULL DEFAULT 'General'
+            AFTER DESCRIPTION;
+            """
+        )
+
+        # Backfill readable category values for existing rows if CATEGORY_ID exists.
+        cursor.execute("SHOW COLUMNS FROM PRODUCTS LIKE 'CATEGORY_ID';")
+        has_category_id_column = cursor.fetchone()
+        if has_category_id_column:
+            cursor.execute(
+                """
+                UPDATE PRODUCTS
+                SET CATEGORY = CONCAT('Category ', CATEGORY_ID)
+                WHERE CATEGORY IS NULL OR CATEGORY = '';
+                """
+            )
+
+
 # tables creation function defination
 def createTables():
 
@@ -38,7 +64,7 @@ def createTables():
         NAME VARCHAR(150) NOT NULL,
         DESCRIPTION TEXT,
 
-        CATEGORY_ID BIGINT NOT NULL,
+        CATEGORY VARCHAR(100) NOT NULL,
 
         IMAGE_URL VARCHAR(255),   -- image path or CDN URL
 
@@ -52,11 +78,12 @@ def createTables():
             ON UPDATE CURRENT_TIMESTAMP,
 
         INDEX idx_product_name (NAME),
-        INDEX idx_category (CATEGORY_ID),
+        INDEX idx_category (CATEGORY),
         INDEX idx_active (ACTIVE)
     );"""
     
     cursor.execute(products_table_query)
+    _ensure_products_category_column(cursor)
     # categories_table_query = """
     #     CREATE TABLE IF NOT EXISTS CATEGORIES (
     #     CATEGORY_ID BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -118,6 +145,7 @@ def createTables():
         FOREIGN KEY (PRODUCTID) REFERENCES PRODUCTS(PRODUCTID) ON DELETE CASCADE
     );"""
     cursor.execute(cart_table_query)
+    db_config.commit()
     cursor.close()
     db_config.close()
 

@@ -1,0 +1,93 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}لوحة التحكم{% endblock %}
+{% block panel_content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card metric-card"><div class="card-body"><small>الإيرادات</small><h4>{{ '%.2f'|format(data.summary.revenue) }}</h4></div></div></div>
+  <div class="col-md-3"><div class="card metric-card"><div class="card-body"><small>الطلبات</small><h4>{{ data.summary.orders }}</h4></div></div></div>
+  <div class="col-md-3"><div class="card metric-card"><div class="card-body"><small>العملاء</small><h4>{{ data.summary.customers }}</h4></div></div></div>
+  <div class="col-md-3"><div class="card metric-card"><div class="card-body"><small>المنتجات</small><h4>{{ data.summary.products }}</h4></div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h5>مخطط المبيعات</h5>
+        <canvas id="salesChart" height="110"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-body">
+        <h6>أفضل المنتجات</h6>
+        <ul class="list-group list-group-flush">
+        {% for p in data.best_sellers %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ p.product_name }}</span><strong>{{ p.sold_qty }}</strong>
+          </li>
+        {% else %}
+          <li class="list-group-item">لا توجد بيانات</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6>تنبيهات المخزون المنخفض</h6>
+        <ul class="list-group list-group-flush">
+        {% for p in data.low_stock_products %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ p.name }}</span>
+            <span class="badge bg-warning text-dark">{{ p.stock }} متبقي</span>
+          </li>
+        {% else %}
+          <li class="list-group-item">لا توجد تنبيهات</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-2">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6>التنبيهات</h6>
+        <ul class="list-group list-group-flush">
+        {% for n in notifications %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ n.title }}</strong>
+              <div class="small text-muted">{{ n.message }}</div>
+            </div>
+            {% if not n.is_read %}
+            <form method="post" action="{{ url_for('admin.mark_notification_read', notification_id=n.id) }}">
+              <button class="btn btn-sm btn-outline-primary">تعيين كمقروء</button>
+            </form>
+            {% endif %}
+          </li>
+        {% else %}
+          <li class="list-group-item">لا توجد تنبيهات</li>
+        {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+const points = {{ sales_chart|safe }};
+const ctx = document.getElementById('salesChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: points.map(p => p.day),
+    datasets: [{ label: 'Sales', data: points.map(p => p.sales), borderColor: '#ff6b35', backgroundColor: 'rgba(255,107,53,.15)', fill: true, tension: .3 }]
+  }
+});
+</script>
+{% endblock %}
+

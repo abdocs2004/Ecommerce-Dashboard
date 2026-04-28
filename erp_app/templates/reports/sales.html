@@ -1,0 +1,53 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}تقرير المبيعات{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">تقرير المبيعات</h4>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <form method="get" class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label">من تاريخ</label>
+        <input type="date" name="from_date" class="form-control" value="{{ from_date }}">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">إلى تاريخ</label>
+        <input type="date" name="to_date" class="form-control" value="{{ to_date }}">
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-erp w-100">عرض</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6"><div class="card metric-card"><div class="card-body"><small>عدد الطلبات</small><h4>{{ data.count }}</h4></div></div></div>
+  <div class="col-md-6"><div class="card metric-card"><div class="card-body"><small>إجمالي المبيعات</small><h4>{{ '%.2f'|format(data.total) }}</h4></div></div></div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead><tr><th>#</th><th>العميل</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+        <tbody>
+        {% for order in data.orders %}
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user.name }}</td>
+            <td>{{ '%.2f'|format(order.total_price) }}</td>
+            <td><span class="badge bg-{{ 'success' if order.status == 'delivered' else 'warning' }}">{{ order.status }}</span></td>
+            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted">لا توجد بيانات</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

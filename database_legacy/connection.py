@@ -5,7 +5,7 @@ def databaseConfig():
     db_config = SQLC.connect(
         host='localhost',
         user = 'root',
-        password='root',
+        password='',
         database = 'ecommerce1'
     )
     return db_config

@@ -1,0 +1,52 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}{{ customer.name }}{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">{{ customer.name }}</h4>
+  <a href="{{ url_for('crm.customers') }}" class="btn btn-outline-dark btn-sm">رجوع</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6>معلومات العميل</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>البريد:</strong> {{ customer.email }}</li>
+          <li class="list-group-item"><strong>الهاتف:</strong> {{ customer.profile.phone if customer.profile else '-' }}</li>
+          <li class="list-group-item"><strong>العنوان:</strong> {{ customer.profile.address if customer.profile else '-' }}</li>
+          <li class="list-group-item"><strong>الوسوم:</strong> <span class="badge bg-light text-dark">{{ customer.profile.tags if customer.profile else 'new' }}</span></li>
+          <li class="list-group-item"><strong>تاريخ التسجيل:</strong> {{ customer.created_at.strftime('%Y-%m-%d') }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h6>سجل المشتريات</h6>
+        {% if orders %}
+        <div class="table-responsive">
+          <table class="table">
+            <thead><tr><th>#</th><th>الإجمالي</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+            <tbody>
+            {% for order in orders %}
+              <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ '%.2f'|format(order.total_price) }}</td>
+                <td><span class="badge bg-{{ 'success' if order.status == 'delivered' else 'warning' }}">{{ order.status }}</span></td>
+                <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">لا توجد طلبات.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

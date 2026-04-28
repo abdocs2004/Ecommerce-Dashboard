@@ -1,0 +1,80 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}إدارة الطلبات{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">إدارة الطلبات</h4>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <form method="get" class="row g-2 mb-3">
+      <div class="col-md-3">
+        <select name="status" class="form-select">
+          <option value="">جميع الحالات</option>
+          {% for s in statuses %}
+          <option value="{{ s }}" {% if current_status == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-dark w-100">تصفية</button>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>العميل</th>
+            <th>الإجمالي</th>
+            <th>الحالة</th>
+            <th>الموظف</th>
+            <th>التاريخ</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user.name }}</td>
+            <td>{{ '%.2f'|format(order.total_price) }}</td>
+            <td>
+              <span class="badge bg-{{ 'success' if order.status == 'delivered' else 'warning' if order.status == 'pending' else 'info' }}">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>{{ order.assigned_staff.name if order.assigned_staff else '-' }}</td>
+            <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+              <form method="post" action="{{ url_for('orders.change_status', order_id=order.id) }}" class="d-inline">
+                <select name="status" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+                  {% for s in statuses %}
+                  <option value="{{ s }}" {% if order.status == s %}selected{% endif %}>{{ s }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              <form method="post" action="{{ url_for('orders.assign_order_route', order_id=order.id) }}" class="d-inline">
+                <select name="staff_id" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+                  <option value="">تعيين</option>
+                  {% for staff in staff_users %}
+                  <option value="{{ staff.id }}" {% if order.assigned_staff_id == staff.id %}selected{% endif %}>{{ staff.name }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              {% if order.invoice %}
+              <a href="{{ url_for('orders.view_invoice', order_id=order.id) }}" class="btn btn-sm btn-outline-success" target="_blank"><i class="bi bi-file-earmark-pdf"></i></a>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="7" class="text-center text-muted">لا توجد طلبات</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

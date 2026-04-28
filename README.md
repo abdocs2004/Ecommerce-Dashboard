@@ -1,65 +1,168 @@
-# 🛒 MyShop - Flask E-Commerce Web Application
+# ERP Commerce Platform (Flask)
 
-MyShop is a **full-stack e-commerce web application** developed using **Python Flask and MySQL**.
-This project allows users to browse products, add items to a cart, and place orders.
-It also includes an **admin dashboard** for managing products and viewing orders.
+A modular ERP + E-commerce system inspired by WooCommerce workflows.
 
----
+## Stack
+- Python + Flask (App Factory)
+- SQLAlchemy ORM (SQLite default, PostgreSQL-ready via DATABASE_URL)
+- Flask-Login (role-based authentication)
+- Bootstrap 5 RTL UI + Chart.js
+- ReportLab PDF invoice generation
 
-## 🚀 Features
+## Core ERP Modules
+- Authentication and role-based access (super_admin, admin, staff, customer)
+- Product and inventory management (SKU, category, tags, variants)
+- Sales and cart system (checkout and order creation)
+- Order management (status workflow)
+- CRM module (customer list, top customers, tags)
+- Invoice module (auto PDF invoice per order)
+- Dashboard analytics (cards, chart, best sellers, alerts)
+- Notification structure (in-app notification records)
 
-* User Registration and Login
-* JWT Authentication
-* Browse Products by Category
-* Add Products to Cart
-* Place Orders
-* View Order History
-* Admin Dashboard
-* Add / Edit / Delete Products
-* Upload Product Images
+## Project Structure
 
----
+```text
+app.py
+erp_app/
+  __init__.py
+  config.py
+  extensions.py
+  models.py
+  security.py
+  blueprints/
+    auth/routes.py
+    admin/routes.py
+    products/routes.py
+    orders/routes.py
+    crm/routes.py
+    inventory/routes.py
+  services/
+    product_service.py
+    inventory_service.py
+    order_service.py
+    crm_service.py
+    report_service.py
+    dashboard_service.py
+    invoice_service.py
+    notification_service.py
+  templates/
+    layouts/
+    auth/
+    admin/
+    products/
+    orders/
+    crm/
+    inventory/
+  static/
+    css/app.css
+    invoices/
+```
 
-## 🛠 Tech Stack
+## Run Locally
 
-Backend: Python, Flask  
-Frontend: HTML, CSS, JavaScript, Jinja2  
-Database: MySQL  
-Authentication: JWT  
-Tools: VS Code, MySQL Workbench
+```bash
+python -m pip install -r requirements.txt
+python app.py
+```
 
----
+Open: http://127.0.0.1:5006
 
-## 📸 Screenshots
+## Default Super Admin
+- Email: `superadmin@erp.local`
+- Password: `admin123`
 
-### User Home
+## Test Accounts
+Use these credentials to log in during development/testing:
 
-![User Home](screenshots/user_home.png)
+- `superadmin@erp.local` — role: `super_admin` — password: `admin123`
+- `admin@erp.local` — role: `admin` — password: `admin123`
+- `staff@erp.local` — role: `staff` — password: `staff123`
 
-### Products Page
+## Roles and Access
+- `super_admin`: full control
+- `admin`: products, orders, CRM, inventory, reports
+- `staff`: order processing and inventory updates
+- `customer`: catalog, cart, checkout, my orders
 
-![Products](screenshots/user_products.png)
+## Notes
+- DB defaults to SQLite file `erp.sqlite3` (inside Flask instance path).
+- To use PostgreSQL, set `DATABASE_URL` environment variable.
+- Invoices are generated at `erp_app/static/invoices/`.
 
-### Categories
+## Installation
 
-![Categories](screenshots/categories.png)
+1. Create and activate a virtual environment (Windows example):
 
-### Cart Page
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
 
-![Cart](screenshots/cart.png)
+2. Copy or create an `.env` file in the project root to set environment variables (see next section).
 
-### Orders Page
+## Environment Variables
 
-![Orders](screenshots/user_orders.png)
+- `FLASK_ENV` (optional): `development` or `production`.
+- `DATABASE_URL` (optional): SQLAlchemy URL for PostgreSQL or other RDBMS. If unset, the app uses the local SQLite file.
+- `SECRET_KEY`: Flask session secret (set for production).
+- `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_SERVER`, `MAIL_PORT` (optional): email settings for notifications.
 
-### Admin Product Management
+Place these in an `.env` file or export them in your environment before running the app.
 
-![Admin](screenshots/admin_products.png)
+## Database
 
----
+- By default the app uses SQLite at the Flask `instance/` path (see `instance/erp.sqlite3`).
+- To initialize or migrate the database (Flask-Migrate / Alembic):
 
-## 👨‍💻 Author
+```powershell
+flask db init   # only if migrations folder does not exist
+flask db migrate -m "Initial"
+flask db upgrade
+```
 
-Jawahar Vanapalli
+Run the above commands from the project root with the virtualenv activated.
 
-Python Full Stack Developer
+## Create Initial Users
+
+If the project includes a script or CLI for creating users, use it to add the test accounts. Otherwise you can seed the database directly via a small script or the Flask shell. Example (Flask shell):
+
+```powershell
+set FLASK_APP=app.py
+flask shell
+# then run Python code to create users and commit
+```
+
+## Run Locally
+
+Start the development server (default port 5006):
+
+```powershell
+python app.py
+```
+
+Open http://127.0.0.1:5006 in your browser.
+
+## Test Accounts
+Use these credentials to log in during development/testing:
+
+- `superadmin@erp.local` — role: `super_admin` — password: `admin123`
+- `admin@erp.local` — role: `admin` — password: `admin123`
+- `staff@erp.local` — role: `staff` — password: `staff123`
+
+## Testing
+
+- There are no automated tests included by default. Add unit tests under a `tests/` folder and run with `pytest`.
+
+## Troubleshooting
+
+- If the server fails to start, check `.env` and `FLASK_APP` settings.
+- If database migrations fail, ensure the virtualenv has the same SQLAlchemy/Alembic versions listed in `requirements.txt`.
+
+## Contributing
+
+- Fork the repo, create a feature branch, and open a pull request. Keep changes focused and include tests where possible.
+
+## License
+
+This project does not include a license file. Add a `LICENSE` if you plan to share the code publicly.

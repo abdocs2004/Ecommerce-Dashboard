@@ -1,0 +1,36 @@
+{% extends 'layouts/panel.html' %}
+{% block title %}تقرير الأرباح{% endblock %}
+{% block panel_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4 class="fw-bold">تقرير الأرباح</h4>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card metric-card"><div class="card-body"><small>إجمالي الإيرادات</small><h4>{{ '%.2f'|format(data.total_revenue) }}</h4></div></div></div>
+  <div class="col-md-4"><div class="card metric-card"><div class="card-body"><small>إجمالي التكاليف</small><h4>{{ '%.2f'|format(data.total_cost) }}</h4></div></div></div>
+  <div class="col-md-4"><div class="card metric-card"><div class="card-body"><small>إجمالي الربح</small><h4 class="{{ 'text-success' if data.total_profit > 0 else 'text-danger' }}">{{ '%.2f'|format(data.total_profit) }}</h4></div></div></div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead><tr><th>المنتج</th><th>الكمية المباعة</th><th>الإيرادات</th><th>التكاليف</th><th>الربح</th></tr></thead>
+        <tbody>
+        {% for item in data.products %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.sold_qty }}</td>
+            <td>{{ '%.2f'|format(item.revenue) }}</td>
+            <td>{{ '%.2f'|format(item.cost) }}</td>
+            <td class="{{ 'text-success' if item.profit > 0 else 'text-danger' }}">{{ '%.2f'|format(item.profit) }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted">لا توجد بيانات</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

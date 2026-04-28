@@ -1,0 +1,88 @@
+:root {
+  --erp-primary: #ff6b35;
+  --erp-secondary: #1f2937;
+  --erp-bg: #f5f7fb;
+  --erp-soft: #fff4ef;
+}
+
+body {
+  font-family: "Tajawal", sans-serif;
+  background: radial-gradient(circle at 10% 10%, #fff2e8, transparent 30%), var(--erp-bg);
+}
+
+.nav-erp {
+  background: linear-gradient(95deg, var(--erp-secondary), #374151);
+}
+
+.navbar-brand {
+  color: #fff !important;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.btn-erp {
+  background: var(--erp-primary);
+  color: #fff;
+  border: 0;
+}
+
+.btn-erp:hover {
+  background: #e95b2a;
+  color: #fff;
+}
+
+.auth-card {
+  border-radius: 18px;
+}
+
+.metric-card {
+  border: 0;
+  background: linear-gradient(135deg, #ffffff, var(--erp-soft));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+.panel-sidebar {
+  position: sticky;
+  top: 90px;
+}
+
+.side-link {
+  color: #334155;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  margin-bottom: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.side-link:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.side-link i {
+  font-size: 1.1rem;
+}
+
+.report-box {
+  background: #fff;
+  border: 1px dashed #d3d7de;
+  border-radius: 12px;
+}
+
+.table th {
+  font-weight: 600;
+  color: #475569;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.badge {
+  font-weight: 500;
+}
+

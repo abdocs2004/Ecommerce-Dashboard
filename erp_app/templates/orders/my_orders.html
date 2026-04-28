@@ -1,0 +1,57 @@
+{% extends 'layouts/base.html' %}
+{% block title %}طلباتي{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h3 class="fw-bold mb-4">طلباتي</h3>
+    {% if orders %}
+    <div class="row g-3">
+    {% for order in orders %}
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold mb-0">طلب #{{ order.id }}</h6>
+              <span class="badge bg-{{ 'success' if order.status == 'delivered' else 'warning' if order.status == 'pending' else 'info' }}">
+                {{ order.status }}
+              </span>
+            </div>
+            <p class="text-muted small mb-2">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead><tr><th>المنتج</th><th>الكمية</th><th>السعر</th></tr></thead>
+                <tbody>
+                {% for item in order.items %}
+                  <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ '%.2f'|format(item.price) }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="2" class="text-end fw-bold">الإجمالي:</td>
+                    <td class="fw-bold">{{ '%.2f'|format(order.total_price) }}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            {% if order.invoice %}
+            <a href="{{ url_for('orders.view_invoice', order_id=order.id) }}" class="btn btn-sm btn-outline-success" target="_blank">
+              <i class="bi bi-file-earmark-pdf"></i> عرض الفاتورة
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">لا توجد طلبات حالياً.</div>
+    <a href="{{ url_for('products.catalog') }}" class="btn btn-outline-dark">تصفح المنتجات</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

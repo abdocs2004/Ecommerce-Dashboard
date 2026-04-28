@@ -1,0 +1,22 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="row g-4">
+  <aside class="col-lg-2">
+    <div class="card shadow-sm border-0 panel-sidebar">
+      <div class="card-body">
+        <a class="d-block side-link" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-grid"></i> لوحة التحكم</a>
+        <a class="d-block side-link" href="{{ url_for('products.manage') }}"><i class="bi bi-box-seam"></i> المنتجات</a>
+        <a class="d-block side-link" href="{{ url_for('orders.manage_orders') }}"><i class="bi bi-receipt"></i> الطلبات</a>
+        <a class="d-block side-link" href="{{ url_for('crm.customers') }}"><i class="bi bi-people"></i> العملاء</a>
+        <a class="d-block side-link" href="{{ url_for('inventory.overview') }}"><i class="bi bi-diagram-3"></i> المخزون</a>
+        <a class="d-block side-link" href="{{ url_for('reports.sales') }}"><i class="bi bi-graph-up"></i> التقارير</a>
+      </div>
+    </div>
+  </aside>
+  <section class="col-lg-10">
+    {% block panel_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}
+
