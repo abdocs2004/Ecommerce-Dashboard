@@ -1,6 +1,11 @@
 # ERP Commerce Platform (Flask)
 
 A modular ERP + E-commerce system inspired by WooCommerce workflows.
+### Admin Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### User Interface
+![User Interface](screenshots/user.png)
 
 ## Stack
 - Python + Flask (App Factory)
@@ -85,12 +90,6 @@ Use these credentials to log in during development/testing:
 - `customer`: catalog, cart, checkout, my orders
 
 ## Screenshots
-
-### Admin Dashboard
-![Dashboard](screenshots/dashboard.png)
-
-### User Interface
-![User Interface](screenshots/user.png)
 
 ## Notes
 - DB defaults to SQLite file `erp.sqlite3` (inside Flask instance path).
