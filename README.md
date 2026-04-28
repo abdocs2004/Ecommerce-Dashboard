@@ -84,6 +84,14 @@ Use these credentials to log in during development/testing:
 - `staff`: order processing and inventory updates
 - `customer`: catalog, cart, checkout, my orders
 
+## Screenshots
+
+### Admin Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### User Interface
+![User Interface](screenshots/user.png)
+
 ## Notes
 - DB defaults to SQLite file `erp.sqlite3` (inside Flask instance path).
 - To use PostgreSQL, set `DATABASE_URL` environment variable.
